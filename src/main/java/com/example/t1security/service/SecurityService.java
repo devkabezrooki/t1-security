@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,20 +21,25 @@ public class SecurityService {
     private final TokenService tokenService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public SecurityService(@Nonnull SystemUserDetailsService systemUserDetailsService,
                            @Nonnull TokenService tokenService,
                            @Nonnull JwtTokenProvider jwtTokenProvider,
-                           @Nonnull AuthenticationManager authenticationManager) {
+                           @Nonnull AuthenticationManager authenticationManager,
+                           @Nonnull PasswordEncoder passwordEncoder) {
         this.systemUserDetailsService = systemUserDetailsService;
         this.tokenService = tokenService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public String registerUser(RegisterRequest request) {
+
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
 
         SystemUserDetails user = SystemUserDetailsMapper.createUserFromRegisterRequest(request);
 
