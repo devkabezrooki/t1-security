@@ -1,6 +1,7 @@
 package com.example.t1security.config;
 
 import com.example.t1security.service.SystemUserDetailsService;
+import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,12 +35,11 @@ public class SecurityConfig {
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     private final SystemUserDetailsService systemUserDetailsService;
 
     @Autowired
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                          SystemUserDetailsService systemUserDetailsService) {
+    public SecurityConfig(@Nonnull JwtAuthenticationFilter jwtAuthenticationFilter,
+                          @Nonnull SystemUserDetailsService systemUserDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.systemUserDetailsService = systemUserDetailsService;
     }

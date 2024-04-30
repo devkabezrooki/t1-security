@@ -24,11 +24,14 @@ public class SystemUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public SystemUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return systemUserDetailsRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        return systemUserDetailsRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+    @Transactional
     public void createUser(SystemUserDetails user) {
         Optional<SystemUserDetails> maybeUser = systemUserDetailsRepository.findByUsername(user.getUsername());
+
         if (maybeUser.isPresent()) {
             throw new RuntimeException("Пользователь с таким username уже существует");
         }

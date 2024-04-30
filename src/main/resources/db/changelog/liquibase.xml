@@ -13,10 +13,10 @@
             <column name="username" remarks="Юзернейм пользователя" type="java.sql.Types.VARCHAR(500)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="password" remarks="Пароль пользователя" type="java.sql.Types.VARCHAR(4000)">
+            <column name="password" remarks="Пароль пользователя" type="java.sql.Types.VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="email" remarks="Эл. почта пользователя" type="java.sql.Types.VARCHAR(4000)">
+            <column name="email" remarks="Эл. почта пользователя" type="java.sql.Types.VARCHAR(500)">
                 <constraints unique="true" nullable="false"/>
             </column>
         </createTable>

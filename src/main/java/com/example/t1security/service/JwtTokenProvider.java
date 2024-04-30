@@ -1,22 +1,20 @@
 package com.example.t1security.service;
 
 import com.example.t1security.model.SystemUserDetails;
-import com.example.t1security.model.Token;
+import com.example.t1security.model.TokenEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 public class JwtTokenProvider {
@@ -29,30 +27,35 @@ public class JwtTokenProvider {
 
     private final TokenService tokenService;
 
+    @Autowired
     public JwtTokenProvider(@Nonnull TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
     public String generateToken(SystemUserDetails userDetails) {
+        Date issuedDate = new Date();
+        Date expirationDate = new Date(issuedDate.getTime() + jwtExpiration);
+
         Map<String, Object> claims = new HashMap<>();
+        claims.put("username", userDetails.getUsername());
         claims.put("roles", userDetails.getRoles());
         claims.put("email", userDetails.getEmail());
-        claims.put("username", userDetails.getUsername());
+
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date().getTime() + jwtExpiration)))
+                .setIssuedAt(issuedDate)
+                .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                 .compact();
     }
 
     public boolean isTokenValid(String token, SystemUserDetails userDetails) {
-        Optional<Token> maybeLastSavedToken = tokenService.getLastTokenForUser(userDetails);
+        Optional<TokenEntity> maybeLastSavedToken = tokenService.getLastTokenForUser(userDetails);
         if (maybeLastSavedToken.isEmpty()) {
             return false;
         } else {
-            Token lastSavedToken = maybeLastSavedToken.get();
-            return lastSavedToken.getToken().equals(token) && !lastSavedToken.isExpired();
+            TokenEntity lastSavedTokenEntity = maybeLastSavedToken.get();
+            return lastSavedTokenEntity.getToken().equals(token) && !lastSavedTokenEntity.isExpired();
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.t1security.controller;
 
-import com.example.t1security.model.dto.SignInRequest;
-import com.example.t1security.model.dto.SignUpRequest;
+import com.example.t1security.model.dto.LoginRequest;
+import com.example.t1security.model.dto.RegisterRequest;
 import com.example.t1security.service.SecurityService;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
@@ -26,12 +26,12 @@ public class SecurityController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequest request) {
-        return ResponseEntity.ok(securityService.register(request));
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest request) {
+        return ResponseEntity.ok(securityService.registerUser(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> signIn(@RequestBody @Valid SignInRequest request) {
-        return ResponseEntity.ok(securityService.login(request));
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request) {
+        return ResponseEntity.ok(securityService.loginUser(request));
     }
 }

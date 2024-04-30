@@ -11,13 +11,13 @@ import lombok.experimental.Accessors;
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-public class SignInRequest {
+public class LoginRequest {
 
-    @Size(min = 5, max = 50, message = "Имя пользователя должно содержать от 5 до 50 символов")
+    @Size(max = 500, message = "Имя пользователя должно быть не более 50 символов")
     @NotBlank(message = "Имя пользователя не может быть пустыми")
     private String username;
 
-    @Size(max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
+    @Size(max = 255, message = "Пароль должен быть от не более 255 символов")
     @NotBlank(message = "Пароль не может быть пустыми")
     private String password;
 }
