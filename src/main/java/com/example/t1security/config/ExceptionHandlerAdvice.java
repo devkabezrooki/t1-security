@@ -1,4 +1,4 @@
-package com.example.t1security.controller;
+package com.example.t1security.config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
