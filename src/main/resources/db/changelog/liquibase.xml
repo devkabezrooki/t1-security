@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1 spring security project init migration" author="devkabezrooki">
+        <createTable tableName="users">
+            <column name="id" remarks="Идентификатор сущности" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="username" remarks="Юзернейм пользователя" type="java.sql.Types.VARCHAR(500)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" remarks="Пароль пользователя" type="java.sql.Types.VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" remarks="Эл. почта пользователя" type="java.sql.Types.VARCHAR(4000)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="tokens">
+            <column name="id" remarks="Идентификатор сущности" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_tokens"/>
+            </column>
+            <column name="user_id" remarks="Идентификатор пользователя" type="java.sql.Types.BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_tokens_users"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="token" remarks="Токен" type="java.sql.Types.VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration_date" remarks="Дата + время протухания токена" type="timestamp(6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_roles">
+            <column name="user_id" remarks="Идентификатор шаблона" type="java.sql.Types.BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_role_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="role" remarks="Роль" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="users">
+            <column name="id" valueNumeric="1"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="$2a$10$apYTdkPKIqYklyhBtNL2tOzI.kN7ebdVWfRqryMbV25p6i4p2G9hC"/>
+            <column name="email" value="admin@admin.com"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1"/>
+            <column name="role" value="USER"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
