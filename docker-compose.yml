@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  t1-security:
+    build: /.
+    container_name: t1-security
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/t1_school_db
+      - SPRING_DATASOURCE_USERNAME=t1_school_admin
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+          
+  db:
+    image: postgres:16
+    container_name: security_db
+    environment:
+      - POSTGRES_USER=t1_school_admin
+      - POSTGRES_PASSWORD=1234
